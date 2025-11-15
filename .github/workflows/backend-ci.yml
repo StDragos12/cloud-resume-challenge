@@ -1,39 +1,39 @@
-name: Frontend CI/CD (Static website)
+name: Backend CI/CD (Azure Function)
 
 on:
   push:
+    branches: [ main ]
     paths:
-      - "cloud-resume-frontend/**"
-      - ".github/workflows/frontend-ci.yml"
+      - 'cloud-resume-backend/**'
+      - '.github/workflows/backend-ci.yml'
 
 jobs:
-  build-and-deploy:
+  test-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          node-version: 18
+          python-version: '3.11'
 
       - name: Install dependencies
-        working-directory: cloud-resume-frontend
-        run: npm install
+        working-directory: cloud-resume-backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
 
-      - name: Build frontend (Vite)
-        working-directory: cloud-resume-frontend
-        run: npm run build
+      - name: Run tests
+        working-directory: cloud-resume-backend
+        run: pytest
 
-      - name: Upload dist to $web
-        uses: azure/CLI@v1
+      - name: Deploy Azure Function using publish profile
+        uses: azure/functions-action@v1
         with:
-          inlineScript: |
-            az storage blob upload-batch \
-              --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
-              --source cloud-resume-frontend/dist \
-              --destination '$web' \
-              --auth-mode key \
-              --account-key ${{ secrets.AZURE_STORAGE_KEY }}
+          app-name: 'stdragoscr-func-qiak8d'   # your function app name
+          package: 'cloud-resume-backend'
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}

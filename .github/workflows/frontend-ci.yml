@@ -39,4 +39,6 @@ jobs:
               --destination '$web' \
               --source cloud-resume-frontend/dist \
               --connection-string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" \
-              --auth-mode key
+              --auth-mode key \
+              --overwrite true
+

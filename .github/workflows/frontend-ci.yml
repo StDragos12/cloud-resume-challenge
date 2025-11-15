@@ -1,0 +1,52 @@
+name: Frontend CI/CD (Static website)
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'cloud-resume-frontend/**'
+      - '.github/workflows/frontend-ci.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'cloud-resume-frontend/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: cloud-resume-frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: cloud-resume-frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend (Vite)
+        env:
+          VITE_VIEWS_API_URL: ${{ secrets.VITE_VIEWS_API_URL }}
+        run: npm run build
+
+      - name: Install Azure CLI
+        uses: azure/cli@v2
+
+      - name: Upload dist to $web
+        env:
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+        run: |
+          az storage blob upload-batch \
+            --connection-string "$AZURE_STORAGE_CONNECTION_STRING" \
+            --destination '$web' \
+            --source dist \
+            --overwrite true

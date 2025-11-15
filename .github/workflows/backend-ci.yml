@@ -1,45 +1,39 @@
-name: Backend CI/CD (Azure Function)
+name: Frontend CI/CD (Static website)
 
 on:
   push:
-    branches: [ main ]
     paths:
-      - 'cloud-resume-backend/**'
-      - '.github/workflows/backend-ci.yml'
-  pull_request:
-    branches: [ main ]
-    paths:
-      - 'cloud-resume-backend/**'
+      - "cloud-resume-frontend/**"
+      - ".github/workflows/frontend-ci.yml"
 
 jobs:
-  test-and-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: cloud-resume-backend
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          python-version: '3.11'
+          node-version: 18
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pytest
+        working-directory: cloud-resume-frontend
+        run: npm install
 
-      - name: Run tests
-        run: pytest
+      - name: Build frontend (Vite)
+        working-directory: cloud-resume-frontend
+        run: npm run build
 
-      - name: Deploy Azure Function using publish profile
-        uses: Azure/functions-action@v1
+      - name: Upload dist to $web
+        uses: azure/CLI@v1
         with:
-          app-name: stdragoscr-func-qiak8d
-          package: cloud-resume-backend
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
-          runtime: python
+          inlineScript: |
+            az storage blob upload-batch \
+              --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
+              --source cloud-resume-frontend/dist \
+              --destination '$web' \
+              --auth-mode key \
+              --account-key ${{ secrets.AZURE_STORAGE_KEY }}

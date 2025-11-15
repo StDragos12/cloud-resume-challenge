@@ -2,13 +2,17 @@ name: Frontend CI/CD (Static website)
 
 on:
   push:
+    branches: [ main ]
     paths:
-      - "cloud-resume-frontend/**"
-      - ".github/workflows/frontend-ci.yml"
+      - 'cloud-resume-frontend/**'
+      - '.github/workflows/frontend-ci.yml'
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
+    env:
+      VITE_VIEWS_API_URL: ${{ secrets.VITE_VIEWS_API_URL }}
 
     steps:
       - name: Checkout repository
@@ -17,23 +21,22 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '20'
 
       - name: Install dependencies
         working-directory: cloud-resume-frontend
-        run: npm install
+        run: npm ci
 
       - name: Build frontend (Vite)
         working-directory: cloud-resume-frontend
         run: npm run build
 
-      - name: Upload dist to $web
-        uses: azure/CLI@v1
+      - name: Upload dist to $web using Azure CLI
+        uses: azure/cli@v2
         with:
           inlineScript: |
             az storage blob upload-batch \
-              --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
-              --source cloud-resume-frontend/dist \
               --destination '$web' \
-              --auth-mode key \
-              --account-key ${{ secrets.AZURE_STORAGE_KEY }}
+              --source cloud-resume-frontend/dist \
+              --connection-string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" \
+              --auth-mode key

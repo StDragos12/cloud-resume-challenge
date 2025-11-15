@@ -32,7 +32,7 @@ export default function Home() {
             The stack will include Azure Static Web Apps for hosting, Azure Functions
             for dynamic features (like a visitor counter), and a lightweight database
             for persistent state. The pipeline is designed for repeatable builds and
-            quick validation.
+            quick validation
           </p>
         </main>
       </div>

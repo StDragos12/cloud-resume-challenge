@@ -1,10 +1,11 @@
 import logging
 import json
 import os
-import azure.functions as func
-from azure.cosmos import CosmosClient, exceptions
 
-app = func.FunctionApp()
+import azure.functions as func
+from azure.cosmos import CosmosClient, PartitionKey, exceptions
+
+app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 COSMOS_URL = os.getenv("COSMOS_URL")
 COSMOS_KEY = os.getenv("COSMOS_KEY")
@@ -13,13 +14,18 @@ COSMOS_CONTAINER = os.getenv("COSMOS_CONTAINER", "views")
 
 
 def _get_container():
+    if not COSMOS_URL or not COSMOS_KEY:
+        raise RuntimeError("COSMOS_URL or COSMOS_KEY not set in app settings")
+
     client = CosmosClient(COSMOS_URL, credential=COSMOS_KEY)
+
     db = client.create_database_if_not_exists(id=COSMOS_DB)
+
     container = db.create_container_if_not_exists(
         id=COSMOS_CONTAINER,
-        partition_key=func.PartitionKey(path="/partitionKey"),
-        offer_throughput=400
+        partition_key=PartitionKey(path="/partitionKey"),
     )
+
     return container
 
 
@@ -34,7 +40,7 @@ def views(req: func.HttpRequest) -> func.HttpResponse:
 
         try:
             item = container.read_item(item=counter_id, partition_key="counter")
-            count = item.get("count", 0)
+            count = int(item.get("count", 0))
         except exceptions.CosmosResourceNotFoundError:
             item = {"id": counter_id, "partitionKey": "counter", "count": 0}
             container.create_item(body=item)
@@ -43,18 +49,18 @@ def views(req: func.HttpRequest) -> func.HttpResponse:
         if req.method == "POST":
             count += 1
             item["count"] = count
-            container.upsert_item(item)
+            container.upsert_item(body=item)
 
         return func.HttpResponse(
             json.dumps({"count": count}),
             status_code=200,
-            mimetype="application/json"
+            mimetype="application/json",
         )
 
     except Exception as e:
-        logging.exception("Internal error")
+        logging.exception("Internal error in views function")
         return func.HttpResponse(
             json.dumps({"error": str(e)}),
             status_code=500,
-            mimetype="application/json"
+            mimetype="application/json",
         )

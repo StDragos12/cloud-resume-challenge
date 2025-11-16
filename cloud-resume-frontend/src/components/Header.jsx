@@ -5,18 +5,15 @@ import { FaHome, FaGithub } from "react-icons/fa";
 export default function Header() {
   const [views, setViews] = useState(null);
 
-  // Use env var in production, fallback to local dev
-  const API_URL =
-    import.meta.env.VITE_VIEWS_API_URL || "http://localhost:7071/api/views";
+  // Hard-coded Function URL instead of env var
+  const API_URL = "https://stdragoscr-func-qiak8d.azurewebsites.net/api/views";
 
   useEffect(() => {
     async function loadViews() {
       try {
         const res = await fetch(API_URL, {
-          method: "POST", // POST increments and returns updated count
-          headers: {
-            "Content-Type": "application/json",
-          },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({}),
         });
 
@@ -29,13 +26,12 @@ export default function Header() {
     }
 
     loadViews();
-  }, [API_URL]); // re-run only if env var changes
+  }, []); // no dependency on env var anymore
 
   return (
     <header className="header">
       <div className="container nav-shell">
         <div className="nav-pill">
-          {/* views badge */}
           <div className="views-badge">
             <span className="views-count" id="viewCount">
               {views === null ? "…" : views}
@@ -43,7 +39,6 @@ export default function Header() {
             <span className="views-label">views</span>
           </div>
 
-          {/* nav */}
           <nav className="menu-center">
             <Link className="menu-link" to="/">
               <FaHome className="link-icon" />

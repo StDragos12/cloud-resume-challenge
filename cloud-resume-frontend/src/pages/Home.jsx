@@ -24,7 +24,7 @@ export default function Home() {
           {/* Architecture image – add the file in /public/images (see notes below) */}
           <figure className="image-row">
             <img
-              src="/images/cloud-portfolio-architecture.png"
+              src="/images/CloudResumeArhitecture.drawio.png"
               alt="High-level architecture of my Azure Cloud Resume project"
             />
             <figcaption>

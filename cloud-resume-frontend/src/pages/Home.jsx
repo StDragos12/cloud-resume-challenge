@@ -22,11 +22,12 @@ export default function Home() {
           </p>
 
           {/* Architecture image – add the file in /public/images (see notes below) */}
-          <figure className="image-row">
-            <img
-              src="/images/CloudResumeArhitecture.drawio.png"
-              alt="High-level architecture of my Azure Cloud Resume project"
-            />
+          <figure className="architecture-section">
+             <img
+    className="architecture-image"
+    src="/images/CloudResumeArhitecture.drawio.png"
+    alt="High-level architecture of my Azure Cloud Resume project"
+  />
             <figcaption>
               High-level architecture: users hit the site through Azure Front Door,
               which serves a static React app and calls an Azure Functions API backed

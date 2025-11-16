@@ -5,7 +5,8 @@ import os
 import azure.functions as func
 from azure.cosmos import CosmosClient, PartitionKey, exceptions
 
-app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+# Plain FunctionApp, no constructor args
+app = func.FunctionApp()
 
 COSMOS_URL = os.getenv("COSMOS_URL")
 COSMOS_KEY = os.getenv("COSMOS_KEY")
@@ -30,7 +31,11 @@ def _get_container():
 
 
 @app.function_name(name="views")
-@app.route(route="views", methods=["GET", "POST"])
+@app.route(
+    route="views",
+    methods=["GET", "POST"],
+    auth_level=func.AuthLevel.ANONYMOUS,  # auth on the route instead of on app
+)
 def views(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("Processing view counter request")
 
@@ -38,6 +43,7 @@ def views(req: func.HttpRequest) -> func.HttpResponse:
         container = _get_container()
         counter_id = "counter"
 
+        # Read or create the counter item
         try:
             item = container.read_item(item=counter_id, partition_key="counter")
             count = int(item.get("count", 0))
@@ -46,6 +52,7 @@ def views(req: func.HttpRequest) -> func.HttpResponse:
             container.create_item(body=item)
             count = 0
 
+        # Increment on POST
         if req.method == "POST":
             count += 1
             item["count"] = count

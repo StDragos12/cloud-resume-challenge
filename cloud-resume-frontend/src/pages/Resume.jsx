@@ -27,7 +27,7 @@ export default function ResumePage() {
           <a className="r-link" href="https://github.com/StDragos12" target="_blank" rel="noreferrer">
             <FaGithub /> GitHub
           </a>
-          <a className="r-link" href="www.linkedin.com/in/stirban-dragos-vasile-bbbb42269" target="_blank" rel="noreferrer">
+          <a className="r-link" href="https://www.linkedin.com/in/stirban-dragos-vasile-bbbb42269" target="_blank" rel="noreferrer">
             <FaLinkedin /> LinkedIn
           </a>
         </div>

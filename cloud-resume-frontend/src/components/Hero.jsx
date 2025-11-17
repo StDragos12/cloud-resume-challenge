@@ -21,7 +21,7 @@ export default function Hero() {
           <a href="https://github.com/StDragos12" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
             <FaGithub className="icon" />
           </a>
-          <a href="www.linkedin.com/in/stirban-dragos-vasile-bbbb42269" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <a href="https://www.linkedin.com/in/stirban-dragos-vasile-bbbb42269" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
             <FaLinkedin className="icon" />
           </a>
         </div>

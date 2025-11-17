@@ -27,7 +27,7 @@ export default function ResumePage() {
           <a className="r-link" href="https://github.com/StDragos12" target="_blank" rel="noreferrer">
             <FaGithub /> GitHub
           </a>
-          <a className="r-link" href="https://www.linkedin.com/in/dragos-stirban/" target="_blank" rel="noreferrer">
+          <a className="r-link" href="www.linkedin.com/in/stirban-dragos-vasile-bbbb42269" target="_blank" rel="noreferrer">
             <FaLinkedin /> LinkedIn
           </a>
         </div>
@@ -35,9 +35,6 @@ export default function ResumePage() {
         <div className="r-actions">
           <a className="btn primary" href="/Stirban_Dragos-Vasile_CV.pdf" download>
             <FaDownload style={{marginRight: 8}}/> Download PDF
-          </a>
-          <a className="btn" href="https://gray-sky-04de71f1e.6.azurestaticapps.net" target="_blank" rel="noreferrer">
-            <FaGlobe style={{marginRight: 8}}/> Portfolio
           </a>
         </div>
       </div>

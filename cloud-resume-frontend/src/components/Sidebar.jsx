@@ -24,7 +24,7 @@ export default function Sidebar() {
               <FaGithub />
             </a>
             <a
-              href="https://www.linkedin.com/in/dragos-stirban/"
+              href="https://www.linkedin.com/in/stirban-dragos-vasile-bbbb42269"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"

@@ -31,7 +31,7 @@ def _get_container():
 
 @app.function_name(name="views")
 @app.route(
-    route="views",
+    route="",
     methods=["GET", "POST"],
     auth_level=func.AuthLevel.ANONYMOUS,  
 )

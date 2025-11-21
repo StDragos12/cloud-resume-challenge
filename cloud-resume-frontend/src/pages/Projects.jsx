@@ -97,7 +97,6 @@ export default function ProjectsPage() {
             </ul>
           </section>
 
-          {/* NEW Architecture Diagram */}
           <section className="project-section architecture-section">
             <h4>System Architecture Diagram</h4>
             <img

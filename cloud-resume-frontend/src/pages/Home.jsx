@@ -21,7 +21,6 @@ export default function Home() {
             full CI/CD pipeline.
           </p>
 
-          {/* Architecture image – add the file in /public/images (see notes below) */}
           <figure className="architecture-section">
              <img
     className="architecture-image"

@@ -175,6 +175,7 @@ export default function ResumePage() {
           <div className="chips">
             <span className="chip chip-cert"><FaCertificate/> CCNA</span>
             <span className="chip chip-cert"><FaCertificate/> ECDL</span>
+            <span className="chip chip-cert"><FaCertificate/> AZ-700 Microsoft Certified: Azure Network Engineer Associate</span>
             <span className="chip chip-cert"><FaCertificate/> Linux & Python (Luxoft)</span>
           </div>
         </div>
